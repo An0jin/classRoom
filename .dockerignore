@@ -1,0 +1,6 @@
+*
+!.gitignore
+!*.py
+!Dockerfile
+!.env
+!requirements.txt

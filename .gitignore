@@ -1,0 +1,8 @@
+*
+!.gitignore
+!*.py
+!Dockerfile
+!.dockerignore
+!requirements.txt
+!assets
+!assets/*
