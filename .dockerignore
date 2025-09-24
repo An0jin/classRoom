@@ -4,3 +4,5 @@
 !Dockerfile
 !.env
 !requirements.txt
+!assets
+!assets/*
