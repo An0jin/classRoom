@@ -11,4 +11,4 @@
 - Gemini LLM (Python SDK) : 배정되 ㄴ결과에 대한 조건식 수정 및 조회, Dashboard 등 prompt
 
 ## 사용기술
-- FastAPI, Ubuntu, Postgres, Docker, Gemini LLM, HTML, CSS
+- FastAPI, Ubuntu, Postgres, Docker, Oracle Cloud, Gemini LLM, HTML, CSS
