@@ -1,13 +1,19 @@
-from fastapi import FastAPI,HTTPException,Request
+from calendar import c
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
+from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from timetable import solve_optimal,generate_html_timetable
+from io import BytesIO
+import pandas as pd
 
-app=FastAPI(
+app = FastAPI(
     docs_url=None,
     redoc_url=None,
     openapi_url=None
 )
+templates = Jinja2Templates(directory="templates")
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 app.add_middleware(
     CORSMiddleware,
@@ -17,30 +23,26 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+@app.get("/")
+def main(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.post("/uploads")
+async def uploads(request: Request,courses: UploadFile = File(...),classRoom: UploadFile = File(...)):
+    courses_byte = await courses.read()
+    classRoom_byte = await classRoom.read()
+    try:
+        courses_df = pd.read_csv(BytesIO(courses_byte))
+    except Exception as e:
+        courses_df = pd.read_excel(BytesIO(courses_byte))
+    try:
+        classRoom_df = pd.read_csv(BytesIO(classRoom_byte))
+    except Exception as e:
+        classRoom_df = pd.read_excel(BytesIO(classRoom_byte))
+    result=solve_optimal(courses_df,classRoom_df)
+    return templates.TemplateResponse("uploads.html", {"request": request,"table":generate_html_timetable(result)})
+
 @app.exception_handler(404)
 def Error404(request: Request, exc: HTTPException):
     path = request.url.path
-    html = f"""
-    <!doctype html>
-    <html lang=\"ko\">
-    <head>
-      <meta charset=\"utf-8\" />
-      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
-      <title>404 Not Found</title>
-      <link rel="stylesheet" href="/assets/style.css">
-
-    </head>
-    <body>
-      <main class=\"card\">
-        <span class=\"badge\">404</span>
-        <h1>요청하신 페이지를 찾을 수 없습니다.</h1>
-        <p>경로 <code>{path}</code> 에 해당하는 리소스가 존재하지 않습니다.</p>
-        <div class=\"actions\">
-          <a class=\"btn\" href=\"/\">홈으로 이동</a>
-          <a class=\"btn\" href=\"#\" onclick=\"history.back();return false;\">이전 페이지</a>
-        </div>
-      </main>
-    </body>
-    </html>
-    """
-    return HTMLResponse(content=html, status_code=exc.status_code)
+    return templates.TemplateResponse("404.html", {"request": request, "path": path}, status_code=404)

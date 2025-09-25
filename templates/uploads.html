@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 Not Found</title>
+  <link rel="stylesheet" href="{{ url_for('assets', path='style.css') }}">
+</head>
+<body>
+    <div class="container">
+      <header class="header">
+        <div class="brand">
+          <div class="logo"></div>
+          <div class="title">시간표 결과</div>
+        </div>
+      </header>
+  
+      <section class="hero panel">
+        <h2 class="m-0" style="color: #000;">시간표 결과</h2>
+      </section>
+  
+      <!-- 업로드 폼 -->
+      <section class="panel mt-4">
+        {{ table|safe }}
+      </section>
+    </div>
+  </body>

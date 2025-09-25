@@ -1,26 +1,34 @@
 body {
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
-    background: #0f172a;
-    color: #e2e8f0;
+    background: #e2e8f0;
+    color: #5b5d616b;
     display: grid;
     place-items: center;
     min-height: 100vh;
 }
 
+html, body { height: 100%; }
+
 .card {
-    background: #111827;
-    border: 1px solid #1f2937;
+    background: #ffe8ec;
+    border: 1px solid #ff0080;
     border-radius: 12px;
     max-width: 720px;
     width: calc(100% - 32px);
     padding: 28px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    text-align: center;
+}
+
+.card code {
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
 .badge {
     display: inline-block;
-    background: #ef4444;
+    background: #ff0080;
     color: white;
     padding: 4px 10px;
     border-radius: 999px;
@@ -41,7 +49,7 @@ p {
 
 code {
     background: #0b1220;
-    color: #93c5fd;
+    color: #ff0080;
     padding: 2px 6px;
     border-radius: 6px;
 }
@@ -51,16 +59,273 @@ code {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 a.btn {
     text-decoration: none;
     padding: 10px 14px;
     border-radius: 8px;
-    border: 1px solid #334155;
-    color: #e2e8f0;
+    border: 1px solid #ff0080;
+    color: #ff0080;
 }
 
 a.btn:hover {
-    background: #0b1220;
+    background: #ff0080;
+    color: white;
 }
+
+a.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 0, 128, 0.25);
+}
+
+a.btn:active {
+  transform: translateY(1px);
+}
+
+/* Layout for index page */
+.container {
+  max-width: 980px;
+  width: 100%;
+  padding: 24px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 2px solid #ff0080; /* use existing accent */
+}
+.title { font-size: 20px; font-weight: 700; letter-spacing: .2px; color: #5b5d61; }
+
+/* Panels */
+.panel {
+  background: #ffe8ec;              /* consistent with card */
+  border: 1px solid rgba(255, 0, 128, 0.35);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+.hero {
+  display: grid;
+  gap: 10px;
+}
+
+/* Grid helpers */
+.grid { display: grid; gap: 14px; }
+.grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 800px) {
+  .grid.cols-2 { grid-template-columns: 1fr; }
+}
+
+/* Utilities */
+.m-0 { margin: 0; }
+.mt-1 { margin-top: 6px; }
+.mt-2 { margin-top: 10px; }
+.mt-3 { margin-top: 16px; }
+.mt-4 { margin-top: 24px; }
+
+/* Inputs */
+.input, select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 0, 128, 0.25);
+  background: #ffffff;
+  color: #5b5d61;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.input::file-selector-button {
+  border: 1px solid rgba(255, 0, 128, 0.35);
+  background: transparent;
+  color: #ff0080;
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #ff0080;
+  box-shadow: 0 0 0 3px rgba(255, 0, 128, 0.18);
+}
+.file-row { align-items: end; }
+.file-label { display: block; font-weight: 600; letter-spacing: .2px; color: #5b5d61; }
+.help-text { display: block; margin-top: 6px; color: #94a3b8; font-size: 12px; }
+
+/* Buttons (class-based) */
+.btn {
+  appearance: none;
+  border: 1px solid #ff0080;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: transparent;
+  color: #ff0080;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.btn:hover { background: #ff0080; color: #fff; }
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(255, 0, 128, 0.25); }
+.btn:active { transform: translateY(1px); }
+
+.btn.primary { background: #ff0080; color: #fff; }
+.btn.primary:hover { filter: brightness(0.95); }
+
+/* Ensure anchor and button share styles */
+a.btn { text-decoration: none; display: inline-block; }
+
+@media (max-width: 480px) {
+  .card { padding: 20px; }
+  h1 { font-size: 20px; }
+  .actions { gap: 8px; }
+}
+/* Page/container layout */
+.container {
+    max-width: 980px;
+    width: 100%;
+    padding: 24px;
+    margin: 0 auto;
+  }
+  
+  /* Header + brand */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .brand .logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 2px solid #ff0080; /* accent */
+  }
+  
+  .brand .title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    color: #5b5d61;
+  }
+  
+  /* Panels and hero section */
+  .panel {
+    background: #ffffffbe; /* match your card */
+    border: 1px solid rgba(255, 0, 128, 0.35);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }
+  
+  .hero {
+    display: grid;
+    gap: 10px;
+  }
+  
+  /* Grid helper for file inputs */
+  .grid { display: grid; gap: 14px; }
+  .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 800px) {
+    .grid.cols-2 { grid-template-columns: 1fr; }
+  }
+  
+  /* Utilities (spacing) */
+  .m-0 { margin: 0; }
+  .mt-1 { margin-top: 6px; }
+  .mt-2 { margin-top: 10px; }
+  .mt-3 { margin-top: 16px; }
+  .mt-4 { margin-top: 24px; }
+  
+  /* Inputs */
+  .input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 0, 128, 0.25);
+    background: #ffffff;
+    color: #5b5d61;
+    transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+  }
+  
+  .input::file-selector-button {
+    border: 1px solid rgba(255, 0, 128, 0.35);
+    background: transparent;
+    color: #ff0080;
+    padding: 6px 10px;
+    border-radius: 8px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #ff0080;
+    box-shadow: 0 0 0 3px rgba(255, 0, 128, 0.18);
+  }
+  
+  .file-row { align-items: end; }
+  .file-label { display: block; font-weight: 600; letter-spacing: .2px; color: #5b5d61; }
+  .help-text { display: block; margin-top: 6px; color: #94a3b8; font-size: 12px; }
+  
+  /* Buttons */
+  .btn {
+    appearance: none;
+    border: 1px solid #ff0080;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: transparent;
+    color: #ff0080;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  
+  .btn:hover { background: #ff0080; color: #fff; }
+  .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(255, 0, 128, 0.25); }
+  .btn:active { transform: translateY(1px); }
+  
+  .btn.primary { background: #ff0080; color: #fff; }
+  .btn.primary:hover { filter: brightness(0.95); }
+  
+  /* Ensure <a class="btn"> looks like a button */
+  a.btn { text-decoration: none; display: inline-block; }
+  
+  /* Make the whole page scroll naturally instead of vertical-center */
+  body {
+    display: block;       /* override previous grid */
+    padding: 24px 0;      /* breathing space for header */
+  }
+  table{
+    border-collapse: collapse;
+   width: 100%; 
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    color:black;
+  }
+  th {
+    background-color: #ff0080;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+  }
