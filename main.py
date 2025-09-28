@@ -4,10 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from timetable import solve_optimal,generate_html_timetable
+from timetable import demonstrate_solution
 from io import BytesIO
 import pandas as pd
-
 app = FastAPI(
     docs_url=None,
     redoc_url=None,
@@ -25,22 +24,7 @@ app.add_middleware(
 
 @app.get("/")
 def main(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
-@app.post("/uploads")
-async def uploads(request: Request,courses: UploadFile = File(...),classRoom: UploadFile = File(...)):
-    courses_byte = await courses.read()
-    classRoom_byte = await classRoom.read()
-    try:
-        courses_df = pd.read_csv(BytesIO(courses_byte))
-    except Exception as e:
-        courses_df = pd.read_excel(BytesIO(courses_byte))
-    try:
-        classRoom_df = pd.read_csv(BytesIO(classRoom_byte))
-    except Exception as e:
-        classRoom_df = pd.read_excel(BytesIO(classRoom_byte))
-    result=solve_optimal(courses_df,classRoom_df)
-    return templates.TemplateResponse("uploads.html", {"request": request,"table":generate_html_timetable(result)})
+    return templates.TemplateResponse("uploads.html", {"request": request,"table":demonstrate_solution()})
 
 @app.exception_handler(404)
 def Error404(request: Request, exc: HTTPException):
