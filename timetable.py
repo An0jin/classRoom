@@ -5,7 +5,8 @@ from sqlalchemy import create_engine
 import time # 지연 시간 테스트용으로 사용될 수 있으으나 여기서는 생략
 import psycopg2
 from psycopg2 import connect
-
+from google import genai
+import markdown
 # PuLP Solver는 실행 환경에 따라 설치 필요: pip install pulp
 # from pulp import LpProblem, LpMaximize, LpVariable, lpSum, PULP_CBC_CMD, LpStatus, value
 
@@ -431,3 +432,13 @@ def demonstrate_solution():
     html_output = generate_html_timetable(schedule_df, courses_df, classRoom_df, unassigned_courses_df)
     
     return html_output
+class LLM:
+    def __init__(self) -> None:
+        self.client = genai.Client(
+    api_key=os.getenv('gemini'))
+    def invok(self,msg,table)->str:
+        response = self.client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=f"{table}이 HTML코드를 보고 {msg}에 대한 답을 해줘라"
+)
+        return markdown.markdown(response.text)

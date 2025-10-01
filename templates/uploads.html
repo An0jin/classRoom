@@ -1,27 +1,54 @@
 <!doctype html>
 <html lang="ko">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>404 Not Found</title>
   <link rel="stylesheet" href="{{ url_for('assets', path='style.css') }}">
+  <title>시간표</title>
 </head>
+
 <body>
-    <div class="container">
-      <header class="header">
-        <div class="brand">
-          <div class="logo"></div>
-          <div class="title">시간표 결과</div>
+  <div class="container">
+    <center>
+      <h1 style="color: black;">시간표</h1>
+    </center>
+    </section>
+    <form method="post">
+      <section class="panel mt-4" id="llm-form">
+        <div class="grid cols-1">
+          <div>
+            <label for="question">질문하기</label>
+            <textarea id="question" name="question" class="input mt-1" rows="3" placeholder="질문 내용을 입력하세요."
+            {% if question %}
+            value="{{ question }}"
+            {% endif %}
+              required></textarea>
+              <input type="hidden" name="table" value="{{ table }}">
+              <div class="result-box">
+                {% if result %}
+                <pre>{{ result | safe }}</pre>
+                {% endif %}
+              </div>
+          </div>
         </div>
-      </header>
-  
-      <section class="hero panel">
-        <h2 class="m-0" style="color: #000;">시간표 결과</h2>
+        <div class="actions mt-3">
+          <button id="submit-btn" class="btn" type="submit">질문하기</button>
+        </div>
       </section>
-  
-      <!-- 업로드 폼 -->
-      <section class="panel mt-4">
+    </form>
+
+    <section class="panel mt-4" id="llm-response-area"
+      style="white-space: pre-wrap; background-color: #f8f8f8; padding: 15px; border-radius: 5px; display: none;">
+      <strong>LLM 응답:</strong><br>
+      <span id="llm-response-text"></span>
+    </section>
+
+    <section class="panel mt-4">
+      <div class="rtable">
         {{ table|safe }}
-      </section>
-    </div>
-  </body>
+      </div>
+    </section>
+
+    <div id="table-data-container" data-table="{{ table|tojson }}" style="display: none;"></div>
+
+  </div>
+</body>

@@ -1,12 +1,11 @@
 from calendar import c
-from fastapi import FastAPI, HTTPException, Request, UploadFile, File
+from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from timetable import demonstrate_solution
-from io import BytesIO
-import pandas as pd
+from timetable import demonstrate_solution, LLM
+from starlette.concurrency import run_in_threadpool
+
 app = FastAPI(
     docs_url=None,
     redoc_url=None,
@@ -24,8 +23,15 @@ app.add_middleware(
 
 @app.get("/")
 def main(request: Request):
-    return templates.TemplateResponse("uploads.html", {"request": request,"table":demonstrate_solution()})
-
+        return templates.TemplateResponse("uploads.html", {"request": request,"table":demonstrate_solution()})
+@app.post("/")
+async def main(request: Request, question: str = Form(...), table: str = Form(...)):
+    lm = LLM()
+    result = await run_in_threadpool(lm.invok, question, table)  # offload sync
+    print(f"결과 : {result}")
+    return templates.TemplateResponse(
+        "uploads.html", {"request": request, "table": table, "result": result,"question":question}
+    )
 @app.exception_handler(404)
 def Error404(request: Request, exc: HTTPException):
     path = request.url.path
