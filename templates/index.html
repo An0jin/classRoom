@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('assets', path='style.css') }}">
+    <title>시간표 생성기</title>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="brand">
+                <div class="logo"></div>
+                <h1 class="title">시간표 생성기</h1>
+            </div>
+        </header>
+
+        <main>
+            <form action="/upload" method="post" enctype="multipart/form-data" class="panel">
+                <!-- 과목 데이터 업로드 섹션 -->
+                <div class="file-upload-container">
+                    <div class="upload-section">
+                        <input type="file" name="subject" id="subject" accept=".xlsx" class="input" required>
+                        <label for="subject" class="btn primary">과목 데이터 업로드</label>
+                        <button type="button" class="btn" onclick="location.href='/download/과목양식'">양식 다운로드</button>
+                        <button type="button" class="btn" onclick="location.href='/download/과목양식(예시)'">예시 다운로드</button>
+                    </div>
+                </div>
+
+                <!-- 강의실 데이터 업로드 섹션 -->
+                <div class="file-upload-container">
+                    <div class="upload-section">
+                        <input type="file" name="classroom" id="classroom" accept=".xlsx" class="input" required>
+                        <label for="classroom" class="btn primary">강의실 데이터 업로드</label>
+                        <button type="button" class="btn" onclick="location.href='/download/강의실양식'">양식 다운로드</button>
+                        <button type="button" class="btn" onclick="location.href='/download/강의실양식(예시)'">예시 다운로드</button>
+                    </div>
+                </div>
+
+                <!-- 교수별 선호 강의실 데이터 업로드 섹션 -->
+                <div class="file-upload-container">
+                    <div class="upload-section">
+                        <input type="file" name="professor_room" id="professor_room" accept=".xlsx" class="input" required>
+                        <label for="professor_room" class="btn primary">교수별 선호 강의실</label>
+                        <button type="button" class="btn" onclick="location.href='/download/교수별선호강의실양식'">양식 다운로드</button>
+                        <button type="button" class="btn" onclick="location.href='/download/교수별선호강의실양식(예시)'">예시 다운로드</button>
+                    </div>
+                </div>
+
+                <!-- 교수별 선호 요일 데이터 업로드 섹션 -->
+                <div class="file-upload-container">
+                    <div class="upload-section">
+                        <input type="file" name="professor_day" id="professor_day" accept=".xlsx" class="input" required>
+                        <label for="professor_day" class="btn primary">교수별 선호 요일</label>
+                        <button type="button" class="btn" onclick="location.href='/download/교수별선호요일양식'">양식 다운로드</button>
+                        <button type="button" class="btn" onclick="location.href='/download/교수별선호요일양식(예시)'">예시 다운로드</button>
+                    </div>
+                </div>
+
+                <!-- 제출 버튼 -->
+                <div class="submit-container" style="margin-top: 24px; text-align: center;">
+                    <button type="submit" class="btn primary" style="padding: 12px 32px; font-size: 1.1em;">시간표 생성하기</button>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

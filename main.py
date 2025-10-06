@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from timetable import demonstrate_solution, LLM
 from starlette.concurrency import run_in_threadpool
+from fastapi.responses import FileResponse
 
 app = FastAPI(
     docs_url=None,
@@ -20,11 +21,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
 @app.get("/")
 def main(request: Request):
+        return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/upload")
+def main(request: Request):
         return templates.TemplateResponse("uploads.html", {"request": request,"table":demonstrate_solution()})
-@app.post("/")
+@app.post("/upload")
 async def main(request: Request, question: str = Form(...), table: str = Form(...)):
     lm = LLM()
     result = await run_in_threadpool(lm.invok, question, table)  # offload sync
@@ -36,3 +40,12 @@ async def main(request: Request, question: str = Form(...), table: str = Form(..
 def Error404(request: Request, exc: HTTPException):
     path = request.url.path
     return templates.TemplateResponse("404.html", {"request": request, "path": path}, status_code=404)
+
+@app.get("/download/{file}")
+def main(request: Request,file: str):
+    filename=f"{file}.xlsx"
+    return FileResponse(
+        path=f"assets/{filename}",
+        media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        filename=filename
+    )
