@@ -2,7 +2,6 @@
 !.gitignore
 !*.py
 !Dockerfile
-!.env
 !requirements.txt
 !assets
 !assets/*
