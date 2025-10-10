@@ -2,9 +2,10 @@
 <html lang="ko">
 
 <head>
-  <link rel="stylesheet" href="{{ url_for('assets', path='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('Assets', path='style.css') }}">
   <title>시간표</title>
 </head>
+
 
 <body>
   <div class="container">
@@ -12,29 +13,20 @@
       <h1 style="color: black;">시간표</h1>
     </center>
     </section>
-    <form method="post">
       <section class="panel mt-4" id="llm-form">
         <div class="grid cols-1">
           <div>
             <label for="question">질문하기</label>
-            <textarea id="question" name="question" class="input mt-1" rows="3" placeholder="질문 내용을 입력하세요."
-            {% if question %}
-            value="{{ question }}"
-            {% endif %}
-              required></textarea>
-              <input type="hidden" name="table" value="{{ table }}">
+            <textarea id="question" name="question" class="input mt-1" rows="3" placeholder="질문 내용을 입력하세요."required></textarea>
               <div class="result-box">
-                {% if result %}
-                <pre>{{ result | safe }}</pre>
-                {% endif %}
               </div>
           </div>
         </div>
         <div class="actions mt-3">
-          <button id="submit-btn" class="btn" type="submit">질문하기</button>
+        
+          <button id="submit-btn" class="btn" type="button" onclick="GetLLM()">질문하기</button>
         </div>
       </section>
-    </form>
 
     <section class="panel mt-4" id="llm-response-area"
       style="white-space: pre-wrap; background-color: #f8f8f8; padding: 15px; border-radius: 5px; display: none;">
@@ -43,12 +35,124 @@
     </section>
 
     <section class="panel mt-4">
+      <!-- <center><button id="download-btn" type="button" class="btn" onclick="Download()">시간표 다운로드</button></center> -->
       <div class="rtable">
         {{ table|safe }}
       </div>
+      
     </section>
 
     <div id="table-data-container" data-table="{{ table|tojson }}" style="display: none;"></div>
 
   </div>
 </body>
+
+<script>
+//  async function Download(){
+//     alert("시간표 다운로드")
+//     const tableElement = document.getElementsByClassName('rtable')[0].innerHTML;
+//     const downloadbtn = document.getElementById('download-btn');
+  
+//     // 3. UI를 '로딩 중' 상태로 변경합니다.
+//     downloadbtn.disabled = true;
+//     downloadbtn.style.opacity = '0.5';
+//     downloadbtn.style.cursor = 'not-allowed';
+//     downloadbtn.value = '로딩 중입니다...';
+//     const formData = new FormData();
+//     alert(tableElement);
+//     formData.append('html', tableElement);
+//     try {
+//           // 5. fetch API를 사용해 서버에 POST 요청을 보냅니다.
+//           const response = await fetch('/result', {
+//               method: 'POST',
+//               body: formData, // FormData를 사용하면 브라우저가 헤더를 자동으로 설정합니다.
+//           });
+  
+//           // 6. HTTP 응답 상태가 정상인지 확인합니다.
+//           if (!response.ok) {
+//               const errorText = await response.text();
+//               throw new Error(`서버 오류 (상태 코드: ${response.status}): ${errorText}`);
+//           }
+      
+//       } catch (error) {
+//           // 8. 오류가 발생하면 콘솔에 기록하고 사용자에게 메시지를 보여줍니다.
+//           console.error('API 요청 오류:', error);
+//           alert(`오류가 발생했습니다: ${error.message}`);
+//       } finally {
+//           // 9. 요청이 성공하든 실패하든 관계없이 버튼을 다시 활성화합니다.
+//           downloadbtn.disabled = false;
+//           downloadbtn.style.opacity = '1';
+//           downloadbtn.style.cursor = 'pointer';
+//       }
+  
+    
+    
+//   }
+  async function GetLLM() {
+      // 1. 필요한 HTML 요소들을 가져옵니다.
+      const submitButton = document.getElementById('submit-btn');
+      const questionTextarea = document.getElementById('question');
+      const responseArea = document.getElementById('llm-response-area');
+      const responseTextSpan = document.getElementById('llm-response-text');
+      const tableElement = document.getElementsByClassName('rtable')[0];
+  
+      // 필수 요소가 존재하는지 확인합니다.
+      if (!submitButton || !questionTextarea || !responseArea || !responseTextSpan || !tableElement) {
+          console.error('필수 HTML 요소 중 일부를 찾을 수 없습니다.');
+          return;
+      }
+  
+      const question = questionTextarea.value;
+      const tableHTML = tableElement.innerHTML;
+  
+      // 2. 질문 내용이 비어 있는지 확인합니다.
+      if (!question.trim()) {
+          responseTextSpan.innerHTML = '<span style="color: red;">질문 내용을 입력해주세요.</span>';
+          responseArea.style.display = 'block';
+          return;
+      }
+  
+      // 3. UI를 '로딩 중' 상태로 변경합니다.
+      submitButton.disabled = true;
+      submitButton.style.opacity = '0.5';
+      submitButton.style.cursor = 'not-allowed';
+      responseTextSpan.textContent = '응답을 생성 중입니다...';
+      responseArea.style.display = 'block';
+  
+      // 4. 'FormData'를 사용해 전송할 데이터를 준비합니다.
+      const formData = new FormData();
+      formData.append('question', question);
+      formData.append('table', tableHTML);
+  
+      try {
+          // 5. fetch API를 사용해 서버에 POST 요청을 보냅니다.
+          const response = await fetch('/llm', {
+              method: 'POST',
+              body: formData, // FormData를 사용하면 브라우저가 헤더를 자동으로 설정합니다.
+          });
+  
+          // 6. HTTP 응답 상태가 정상인지 확인합니다.
+          if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`서버 오류 (상태 코드: ${response.status}): ${errorText}`);
+          }
+  
+          // 7. 응답 본문을 JSON으로 파싱하고 결과를 화면에 표시합니다.
+          // FastAPI 백엔드는 일반적으로 JSON 형식으로 응답합니다.
+          const result = await response.json();
+          
+          // JSON 결과를 가독성 좋게 <pre> 태그로 감싸서 출력합니다.
+          responseTextSpan.innerHTML = `<pre style="white-space: pre-wrap; word-wrap: break-word;">${JSON.stringify(result, null, 2)}</pre>`;
+      
+      } catch (error) {
+          // 8. 오류가 발생하면 콘솔에 기록하고 사용자에게 메시지를 보여줍니다.
+          console.error('API 요청 오류:', error);
+          responseTextSpan.innerHTML = `<span style="color: red;">오류가 발생했습니다: ${error.message}</span>`;
+      } finally {
+          // 9. 요청이 성공하든 실패하든 관계없이 버튼을 다시 활성화합니다.
+          submitButton.disabled = false;
+          submitButton.style.opacity = '1';
+          submitButton.style.cursor = 'pointer';
+      }
+  }
+  </script>
