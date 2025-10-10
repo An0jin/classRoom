@@ -16,7 +16,7 @@ app = FastAPI(
     openapi_url=None
 )
 templates = Jinja2Templates(directory="templates")
-app.mount("/Assets", StaticFiles(directory="Assets"), name="Assets")
+app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
