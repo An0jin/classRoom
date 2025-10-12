@@ -7,3 +7,7 @@
 !assets/*
 !templates
 !templates/*
+!readme.md
+!*.csv
+!*.xlsx
+!*.xls
