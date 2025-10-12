@@ -313,22 +313,75 @@ a.btn { text-decoration: none; display: inline-block; }
     display: block;       /* override previous grid */
     padding: 24px 0;      /* breathing space for header */
   }
-  table{
+table {
+    /* 기존 속성 유지 */
     border-collapse: collapse;
-   width: 100%; 
-  }
-  th, td {
+    width: 100%; 
+    
+    /* ★ 핵심: 셀 내용에 상관없이 너비를 고정하고 균등하게 만듭니다. */
+    table-layout: fixed; 
+}
+
+th, td {
+    /* 기존 속성 유지 */
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
-    color:black;
-  }
-  th {
-    background-color: #ff0080;
+    color: black;
+    
+    /* 시간표 이미지처럼 내용물이 세로 중앙에 오도록 조정 */
+    vertical-align: middle; 
+}
+
+th {
+    /* 기존 속성 유지 */
+    background-color: #ff0066; /* 이미지와 유사하게 색상 조정 */
     color: white;
     font-weight: bold;
-    text-align: center;
-  }
+    /* text-align: center; (th, td에 이미 적용됨) */
+    
+    /* 헤더의 상하 여백을 약간 늘려 시각적으로 분리 */
+    padding: 10px 8px; 
+}
+
+/* ---------------------------------------------------- */
+/* ★ 너비(Column Width) 지정: 일정한 간격을 위한 필수 설정 */
+/* ---------------------------------------------------- */
+
+/* 교시(첫 번째 열)의 너비 지정 */
+.timetable th:first-child,
+.timetable td:first-child {
+    width: 12%; /* 첫 열을 조금 넓게 할당 */
+    background-color: #f7f7f7; /* 교시 셀의 배경색을 살짝 다르게 */
+    font-weight: bold;
+}
+
+/* 요일(나머지 5개 열)의 너비 균등 분배 */
+.timetable th:not(:first-child),
+.timetable td:not(:first-child) {
+    /* 남은 88%의 너비를 5개 열이 균등하게 분배 (17.6%씩) */
+    width: 17.6%; 
+}
+
+/* ---------------------------------------------------- */
+/* ★ 높이(Row Height) 지정: 교시 칸의 높이를 일정하게 조정 */
+/* ---------------------------------------------------- */
+
+.timetable td {
+    /* 교시별 칸의 높이를 지정하여 세로 폭을 일정하게 만듭니다. */
+    height: 60px; 
+}
+
+/* ---------------------------------------------------- */
+/* 추가: 수업 내용 텍스트 스타일 */
+/* ---------------------------------------------------- */
+
+/* 강의명 텍스트의 크기를 약간 줄이고 줄 간격 조정 */
+.subject-info { 
+    font-size: 0.9em;
+    line-height: 1.4;
+    font-weight: normal;
+}
   .file-upload-container {
     display: flex;
     flex-direction: column;
