@@ -19,12 +19,12 @@
 
         <main>
 
-            <form action="/upload" method="post" enctype="multipart/form-data" class="panel">
+            <form action="/upload" method="post" enctype="multipart/form-data" class="panel" onsubmit="return Submit(event)">
                 <!-- 과목 데이터 업로드 섹션 -->
                 
                 <div class="file-upload-container">
                     <div class="upload-section">
-                        <input type="file" name="subject" id="subject" accept=".xlsx" class="input" required>
+                        <input type="file" name="subject" id="subject" accept=".xlsx" class="input">
                         <label for="subject" class="btn primary">과목 데이터 업로드</label>
                         <button type="button" class="btn" onclick="location.href='/download/과목양식'">양식 다운로드</button>
                         <button type="button" class="btn" onclick="location.href='/download/과목양식(예시)'">예시 다운로드</button>
@@ -34,7 +34,7 @@
                 <!-- 강의실 데이터 업로드 섹션 -->
                 <div class="file-upload-container">
                     <div class="upload-section">
-                        <input type="file" name="classroom" id="classroom" accept=".xlsx" class="input" required>
+                        <input type="file" name="classroom" id="classroom" accept=".xlsx" class="input">
                         <label for="classroom" class="btn primary">강의실 데이터 업로드</label>
                         <button type="button" class="btn" onclick="location.href='/download/강의실양식'">양식 다운로드</button>
                         <button type="button" class="btn" onclick="location.href='/download/강의실양식(예시)'">예시 다운로드</button>
@@ -75,12 +75,45 @@
                 </div>
                 <!-- 제출 버튼 -->
                 <div class="submit-container" style="margin-top: 24px; text-align: center;">
-                    <button type="submit" class="btn primary" style="padding: 12px 32px; font-size: 1.1em;">시간표
-                        생성하기</button>
+                    <button type="submit" class="btn primary" id="submit-btn" style="padding: 12px 32px; font-size: 1.1em;" >시간표
+                        생성하기</button>:
                 </div>
             </form>
         </main>
     </div>
 </body>
+<script>
+function Submit(event){
+    const subjectInput = document.getElementById('subject'); // id로 접근하는 것이 가장 명확합니다.
+    const classroomInput = document.getElementById('classroom'); // id로 접근합니다.
+    const submitButton = document.getElementById('submit-btn');   
+    
+    let result = true; // 유효성 검사 결과
+    
+    // 1. 과목 데이터 파일 업로드 여부 확인
+    // files 속성의 length가 0이면 파일이 선택되지 않은 것입니다.
+    if (subjectInput.files.length === 0) { 
+        alert("과목 데이터를 업로드 해주세요.");
+        result = false;
+    }
 
+    // 2. 강의실 데이터 파일 업로드 여부 확인
+    if (classroomInput.files.length === 0) { 
+        alert("강의실 데이터를 업로드 해주세요.");
+        result = false;
+    }
+    
+    if (result) {
+      subject=document.getElementsByName('subject');
+      classroom=document.getElementsByName('classroom');
+      submitButton.disabled = true;
+      submitButton.style.opacity = '0.5';
+      submitButton.style.cursor = 'not-allowed';
+      submitButton.innerText = '시간표를 생성 중입니다...';
+      responseArea.style.display = 'block';
+    }
+    return result;
+      
+}
+</script>
 </html>

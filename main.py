@@ -39,10 +39,21 @@ async def Upload(request: Request,semester:int=Form(...),subject:UploadFile = Fi
     if semester==2:
         subject_df.loc[subject_df['개설학년']==3,'교과목학점']*=2
     classroom_df=await UploadFile_to_DataFrame(classroom)
-    if professor_room is not None:
-        professor_room_df=await UploadFile_to_DataFrame(professor_room)
-    if professor_day is not None:
-        professor_day_df=await UploadFile_to_DataFrame(professor_day)
+    professor_room_df = None
+    professor_day_df = None
+    if professor_room is not None and professor_room.filename:
+        try:
+            professor_room_df=await UploadFile_to_DataFrame(professor_room)
+        except ValueError:
+             print("경고: 교수 선호 강의실 파일의 형식을 인식할 수 없습니다. None으로 처리합니다.")
+             professor_room_df = None
+    
+    if professor_day is not None and professor_day.filename:
+        try:
+            professor_day_df=await UploadFile_to_DataFrame(professor_day)
+        except ValueError:
+            print("경고: 교수 선호 요일 파일의 형식을 인식할 수 없습니다. None으로 처리합니다.")
+            professor_day_df = None
     result=solve_optimal(subject_df,classroom_df,professor_room_df,professor_day_df)
     if(type(result)==str):
         return templates.TemplateResponse("uploads.html", {"request": request,"table":result})
