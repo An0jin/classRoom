@@ -3,6 +3,11 @@ import pandas as pd
 from google import genai
 import markdown
 from pulp import *
+from fastapi import UploadFile
+
+async def UploadFile_to_DataFrame(file:UploadFile):
+    file_byte=await file.read()
+    return pd.read_excel(file_byte)
 
 def solve_optimal(courses_df: pd.DataFrame, rooms_df: pd.DataFrame, 
                   prof_rooms_df: pd.DataFrame=None, prof_days_df: pd.DataFrame=None) -> pd.DataFrame:
@@ -39,7 +44,7 @@ def solve_optimal(courses_df: pd.DataFrame, rooms_df: pd.DataFrame,
             
             # 🚨 강의실 DF에 '수용인원' 컬럼이 없으므로, 모델 실행을 위해 50명 임시 설정 🚨
             if 'size' not in rooms_df.columns:
-                rooms_df['size'] = 50 
+                rooms_df['size'] = 45 
                 
         except KeyError as e:
             raise ValueError(f"강의실정보 데이터에서 필수 컬럼 '{e.args[0]}'을 찾을 수 없습니다.")
@@ -221,7 +226,7 @@ def solve_optimal(courses_df: pd.DataFrame, rooms_df: pd.DataFrame,
     except KeyError as e:
         return f"오류: 파일이 양식에 맞지 않습니다"
     except Exception as e:
-        return f"오류: 예기치 않은 오류 발생: {e}"
+        return f"오류: {str(e)}"
         
 
 

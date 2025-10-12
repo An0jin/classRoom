@@ -5,6 +5,8 @@
 !requirements.txt
 !assets
 !assets/*
+!asset
+!asset/*
 !templates
 !templates/*
 !readme.md

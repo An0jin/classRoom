@@ -3,12 +3,9 @@ from fastapi import FastAPI, Form, HTTPException, Request,File,UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from timetable import solve_optimal, LLM,generate_html_timetable
-from fastapi.responses import FileResponse,StreamingResponse
-from io import BytesIO
+from DataControll import solve_optimal, LLM,generate_html_timetable,UploadFile_to_DataFrame
+from fastapi.responses import FileResponse
 import pandas as pd
-from bs4 import BeautifulSoup
-import urllib.parse
 
 app = FastAPI(
     docs_url=None,
@@ -16,7 +13,7 @@ app = FastAPI(
     openapi_url=None
 )
 templates = Jinja2Templates(directory="templates")
-app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+app.mount("/asset", StaticFiles(directory="asset"), name="asset")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,9 +24,7 @@ app.add_middleware(
 @app.get("/")
 def Main(request: Request):
         return templates.TemplateResponse("index.html", {"request": request})
-async def UploadFile_to_DataFrame(file:UploadFile):
-    file_byte=await file.read()
-    return pd.read_excel(file_byte)
+
 
 @app.post("/upload")
 async def Upload(request: Request,semester:int=Form(...),subject:UploadFile = File(...),classroom:UploadFile = File(...),professor_room:UploadFile = File(None),professor_day:UploadFile = File(None)):
@@ -76,7 +71,7 @@ def Error404(request: Request, exc: HTTPException):
 def Download(request: Request,file: str):
     filename=f"{file}.xlsx"
     return FileResponse(
-        path=f"assets/{filename}",
+        path=f"asset/{filename}",
         media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         filename=filename
     )
