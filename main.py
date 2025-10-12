@@ -44,8 +44,11 @@ async def Upload(request: Request,semester:int=Form(...),subject:UploadFile = Fi
     if professor_day is not None:
         professor_day_df=await UploadFile_to_DataFrame(professor_day)
     result=solve_optimal(subject_df,classroom_df,professor_room_df,professor_day_df)
-    html=generate_html_timetable(result)
-    return templates.TemplateResponse("uploads.html", {"request": request,"table":html})
+    if(type(result)==str):
+        return templates.TemplateResponse("uploads.html", {"request": request,"table":result})
+    else:
+        html=generate_html_timetable(result)
+        return templates.TemplateResponse("uploads.html", {"request": request,"table":html})
 
 @app.post("/llm")
 async def Llm(request: Request,question:str=Form(...),table:str=Form(...)):
