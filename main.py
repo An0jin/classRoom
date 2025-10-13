@@ -49,6 +49,7 @@ async def Upload(request: Request,semester:int=Form(...),subject:UploadFile = Fi
         except ValueError:
             print("경고: 교수 선호 요일 파일의 형식을 인식할 수 없습니다. None으로 처리합니다.")
             professor_day_df = None
+    print(subject_df)
     result=solve_optimal(subject_df,classroom_df,professor_room_df,professor_day_df)
     if(type(result)==str):
         return templates.TemplateResponse("uploads.html", {"request": request,"table":result})
