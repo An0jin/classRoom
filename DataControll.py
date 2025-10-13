@@ -4,6 +4,10 @@ from google import genai
 import markdown
 from pulp import *
 from fastapi import UploadFile
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 async def UploadFile_to_DataFrame(file:UploadFile):
     file_byte=await file.read()
@@ -127,6 +131,7 @@ def solve_optimal(courses_df: pd.DataFrame, rooms_df: pd.DataFrame,
 
         prob += lpSum(objective_elements), "Total_Penalty"
 
+        load_dotenv()
         # 5. 필수 제약 조건 (Hard Constraints)
         
         # 5.1. 강의 시간 완수

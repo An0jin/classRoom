@@ -5,7 +5,6 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from DataControll import solve_optimal, LLM,generate_html_timetable,UploadFile_to_DataFrame
 from fastapi.responses import FileResponse
-import pandas as pd
 
 app = FastAPI(
     docs_url=None,
@@ -28,9 +27,10 @@ def Main(request: Request):
 
 @app.post("/upload")
 async def Upload(request: Request,semester:int=Form(...),subject:UploadFile = File(...),classroom:UploadFile = File(...),professor_room:UploadFile = File(None),professor_day:UploadFile = File(None)):
-    
-
     subject_df=await UploadFile_to_DataFrame(subject)
+    subject_df['그룹순번'] = subject_df.groupby(['개설학과', '교과목명', '개설학년']).cumcount()
+    subject_df['반'] = subject_df['그룹순번'].apply(lambda x : chr(ord('A') + x))
+    subject_df = subject_df.drop(columns=['그룹순번'])
     if semester==2:
         subject_df.loc[subject_df['개설학년']==3,'교과목학점']*=2
     classroom_df=await UploadFile_to_DataFrame(classroom)
