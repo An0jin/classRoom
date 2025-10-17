@@ -315,9 +315,9 @@ def generate_html_timetable(schedule_df: pd.DataFrame) -> str:
                         grid[p-1][day_idx] = 'occupied' # 병합될 셀 표시
 
         # HTML 테이블 생성
-        table_html = "<table><thead><tr><th class='period-col'>교시</th>"
+        table_html = "<table border='1' style='border-color: black;'><thead><tr><th class='period-col' style='text-align: center;'>교시</th>"
         for day in days_order:
-            table_html += f"<th>{day}</th>"
+            table_html += f"<th style='text-align: center;'>{day}</th>"
         table_html += "</tr></thead><tbody>"
         
         for period_idx in range(max_period):
@@ -327,7 +327,7 @@ def generate_html_timetable(schedule_df: pd.DataFrame) -> str:
                 if cell_content == 'occupied':
                     continue # 이미 병합된 셀이므로 건너뜀
                 elif isinstance(cell_content, dict):
-                    table_html += f"<td class='class-cell' rowspan='{cell_content['rowspan']}'>{cell_content['html']}</td>"
+                    table_html += f"<td class='class-cell' rowspan='{cell_content['rowspan']}' style='background-color: #E45580;color: white;'>{cell_content['html']}</td>"
                 else:
                     table_html += "<td></td>" # 빈 셀
             table_html += "</tr>"
@@ -342,9 +342,10 @@ class LLM:
     def __init__(self) -> None:
         self.client = genai.Client(
     api_key=os.getenv('gemini'))
-    def invok(self,msg,table)->str:
+    def invok(self,prompt)->str:
         response = self.client.models.generate_content(
         model="gemini-2.5-flash",
-        contents=f"{table}이 HTML코드를 보고 {msg}에 대한 답을 해줘라"
+        contents=f"{prompt}",
+        config={}
 )
-        return markdown.markdown(response.text)
+        return markdown.markdown(response.text.replace("\n","<br>"))

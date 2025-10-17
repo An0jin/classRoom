@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('asset', path='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <title>시간표 생성 홈페이지</title>
 </head>
 
@@ -16,11 +17,11 @@
                 <h1 class="title">시간표 생성 홈페이지</h1>
             </div>
         </header>
-
         <main>
 
             <form action="/upload" method="post" enctype="multipart/form-data" class="panel" onsubmit="return Submit(event)">
                 <!-- 과목 데이터 업로드 섹션 -->
+
                 
                 <div class="file-upload-container">
                     <div class="upload-section">

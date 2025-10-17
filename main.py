@@ -60,7 +60,8 @@ async def Upload(request: Request,semester:int=Form(...),subject:UploadFile = Fi
 @app.post("/llm")
 async def Llm(request: Request,question:str=Form(...),table:str=Form(...)):
     llm=LLM()
-    result=llm.invok(question,table)
+    prompt=f"{table}이 HTML코드를 보고 {question}에 대한 답을 해줘라"
+    result=llm.invok(prompt)
     return result
 
 @app.exception_handler(404)
